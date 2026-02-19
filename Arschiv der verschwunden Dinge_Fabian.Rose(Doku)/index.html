@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Return to THE Devices — Archiv der verschwundenen Dinge</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================
+       RtTD — Basis-Styles
+       =========================== */
+    :root {
+      --bg-main: #0b0e11;
+      --text-main: #ffffff;      
+      --text-muted: #d0d0d0;   
+      --border-subtle: rgba(255,255,255,0.15);
+      
+      --accent-ruby: #9b1c31;
+      --accent-ruby-soft: #c24a5c;
+      --accent-blue: #1f4e5f;
+      --accent-blue-soft: #3a7c8c;
+      
+      /* Demo-Variablen */
+      --demo-game: #8bac0f;
+      --demo-cam: #ffffff;
+      --demo-phone: #0dcaf0;
+      --demo-radio: #ff9e0b;
+      --demo-card-bg: #121214;
+    }
+
+    body { 
+      background-color: var(--bg-main); 
+      color: var(--text-main); 
+      font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; }
+    h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-main); }
+    p, small { color: var(--text-muted); }
+
+    /* Typografie */
+    .font-monospace { font-family: 'Space Mono', ui-monospace, monospace; }
+    .text-uppercase { text-transform: uppercase; letter-spacing: 1px; }
+    .display-1 { font-weight: 700; letter-spacing: -2px; }
+
+    /* Navbar */
+    .navbar { backdrop-filter: blur(10px); background-color: rgba(11, 14, 17, 0.95) !important; }
+    .navbar-brand .gizmo-dot { 
+      width: 12px; height: 12px; border-radius: 50%; 
+      background-color: var(--accent-ruby); display: inline-block; 
+      box-shadow: 0 0 10px var(--accent-ruby);
+    }
+    .nav-link { color: var(--text-main) !important; transition: color 0.2s; font-size: 0.9rem; }
+    .nav-link:hover { color: var(--accent-ruby) !important; }
+
+    /* THE DEVICE LINK (Header Special) */
+    .nav-device-link {
+        border: 1px solid var(--accent-ruby);
+        color: var(--accent-ruby) !important;
+        padding: 5px 15px;
+        border-radius: 2px;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+    }
+    .nav-device-link:hover {
+        background: var(--accent-ruby);
+        color: #fff !important;
+        box-shadow: 0 0 15px var(--accent-ruby);
+    }
+
+    /* Hero */
+    header#home { position: relative; overflow: hidden; }
+    .text-gradient { 
+      background: linear-gradient(90deg, var(--accent-ruby), var(--accent-blue-soft)); 
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    }
+    .ambient-glow { 
+      position: absolute; inset: 0; 
+      background: radial-gradient(circle at center, rgba(155,28,49,0.25) 0%, rgba(11,14,17,0) 70%); 
+      z-index: 0; pointer-events: none; 
+    }
+
+    /* Glitch Effekt */
+    .glitch { position: relative; display: inline-block; }
+    .glitch::before, .glitch::after {
+      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8;
+    }
+    .glitch::before {
+      left: 2px; text-shadow: -1px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim 5s infinite linear alternate-reverse;
+    }
+    .glitch::after {
+      left: -2px; text-shadow: -1px 0 #00fff9; clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim2 5s infinite linear alternate-reverse;
+    }
+    @keyframes glitch-anim {
+      0% { clip: rect(30px, 9999px, 10px, 0); }
+      10% { clip: rect(10px, 9999px, 40px, 0); }
+      100% { clip: rect(44px, 9999px, 56px, 0); }
+    }
+    @keyframes glitch-anim2 {
+      0% { clip: rect(10px, 9999px, 80px, 0); }
+      10% { clip: rect(50px, 9999px, 10px, 0); }
+      100% { clip: rect(67px, 9999px, 12px, 0); }
+    }
+
+    /* Kontrolliertes Flackern für den Header */
+    .flicker-container { display: inline-block; white-space: nowrap; }
+    .flicker-char {
+      display: inline-block;
+      min-width: 0.6em; 
+      animation: char-flicker 6s infinite;
+    }
+    .flicker-char:nth-child(2n) { animation-delay: 0.5s; }
+    .flicker-char:nth-child(3n) { animation-delay: 1.2s; }
+    .flicker-char:nth-child(5n) { animation-delay: 3s; }
+
+    @keyframes char-flicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; color: inherit; text-shadow: none; }
+      20%, 24%, 55% { opacity: 0.3; color: var(--accent-ruby); text-shadow: 0 0 8px var(--accent-ruby); }
+    }
+
+    /* Lichtpuls */
+    .neon-pulse {
+      display: inline-block;
+      color: #fff;
+      animation: light-heartbeat 2s ease-in-out infinite;
+    }
+    @keyframes light-heartbeat {
+      0% { text-shadow: 0 0 5px rgba(255,255,255,0.5); transform: scale(1); }
+      50% { text-shadow: 0 0 20px #fff, 0 0 30px var(--accent-ruby); transform: scale(1.05); }
+      100% { text-shadow: 0 0 5px rgba(255,255,255,0.5); transform: scale(1); }
+    }
+
+    /* RGB LED */
+    .led-char { font-weight: 700; display: inline-block; }
+    .led-r { color: #ff3333; text-shadow: 0 0 8px #ff0000; animation: slow-blink 2s ease-in-out infinite; }
+    .led-g { color: #33ff33; text-shadow: 0 0 8px #00ff00; animation: slow-blink 2s ease-in-out infinite 0.5s; }
+    .led-b { color: #3388ff; text-shadow: 0 0 8px #0088ff; animation: slow-blink 2s ease-in-out infinite 1.0s; }
+    @keyframes slow-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Old Neon Glow */
+    .neon-old {
+      color: #fff;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00de, 0 0 35px #ff00de;
+      animation: neon-broken 4s infinite;
+    }
+    @keyframes neon-broken {
+      0%, 30%, 32%, 34%, 40%, 100% { opacity: 1; }
+      31%, 33%, 35% { opacity: 0.2; text-shadow: none; }
+    }
+
+    /* Sektionen */
+    .bg-dark-card { 
+      background-color: #11141a; 
+      border: 1px solid var(--border-subtle); 
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .bg-dark-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-ruby-soft);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    /* Illustration */
+    .pulse-circle { fill: var(--accent-ruby); animation: pulse 3s ease-in-out infinite; }
+    @keyframes pulse { 0% { r: 8; opacity: 0.3; } 50% { r: 14; opacity: 0.8; } 100% { r: 8; opacity: 0.3; } }
+
+    .signal-wave { stroke: var(--accent-blue-soft); stroke-dasharray: 4 2; animation: wave-flow 4s linear infinite; opacity: 0.6; }
+    @keyframes wave-flow { 0% { stroke-dashoffset: 20; } 100% { stroke-dashoffset: 0; } }
+
+    /* =========================================
+       PROTOTYPE SIMULATION STYLES (Grid)
+       ========================================= */
+    #prototype-stage {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      display: grid;
+      gap: 20px;
+      grid-template-areas:
+        "tl top tr"
+        "left center right"
+        "bl bottom br";
+      grid-template-columns: 1fr 280px 1fr;
+      grid-template-rows: auto auto auto;
+      align-items: center;
+      justify-items: center;
+    }
+
+    @media (max-width: 768px) {
+      #prototype-stage {
+        grid-template-areas: "center" "top" "left" "right" "bottom";
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    .device-core {
+      grid-area: center;
+      width: 100%;
+      max-width: 280px;
+      height: 520px;
+      background: #000;
+      border: 4px solid #333;
+      border-radius: 30px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .scanlines {
+      position: absolute; inset: 0; pointer-events: none; z-index: 20;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.1) 50%);
+      background-size: 100% 4px;
+    }
+
+    .screen-data { z-index: 5; position: relative; width: 100%; padding: 20px; }
+    .screen-data h1 { font-family: 'Space Mono', monospace; font-size: 2.2rem; margin: 0; color: #fff; }
+    .screen-data p { font-family: 'Space Mono', monospace; font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; margin-top: 10px; color: #fff; }
+    
+    /* Compass Needle */
+    .compass-container {
+      width: 120px;
+      height: 120px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      position: relative;
+      margin: 20px auto;
+    }
+    .compass-needle { 
+      width: 2px; 
+      height: 100px; 
+      background: linear-gradient(to bottom, var(--accent-ruby) 50%, #fff 50%); 
+      position: absolute;
+      top: 10px;
+      left: 59px;
+      border-radius: 1px; 
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    }
+
+    /* Viewfinder */
+    .viewfinder {
+      border: 1px solid rgba(255,255,255,0.3);
+      width: 100%;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      background: #050505;
+    }
+    .viewfinder-corner {
+      position: absolute; width: 10px; height: 10px; border: 2px solid #fff;
+    }
+    .tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+    .tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+    .bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+    .br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+    /* AI Input */
+    .ai-box { text-align: left; }
+    .ai-input { 
+      background: #111; 
+      border: 1px solid #333; 
+      color: var(--accent-blue-soft); 
+      font-family: 'Space Mono', monospace; 
+      width: 100%; 
+      padding: 10px; 
+      margin-top: 15px; 
+      border-radius: 4px; 
+      font-size: 0.75rem; 
+      outline: none; 
+      border-bottom: 2px solid var(--accent-blue);
+    }
+    
+    /* Calculator Styles */
+    .calc-btn {
+        background: #333; 
+        color: #fff; 
+        border: 1px solid #555; 
+        border-radius: 4px; 
+        cursor: pointer;
+        transition: background 0.1s;
+    }
+    .calc-btn:hover { background: #555; }
+    .calc-btn:active { background: #222; }
+
+    .home-bar { position: absolute; bottom: 20px; width: 40%; height: 5px; background: #333; border-radius: 10px; cursor: pointer; transition: 0.3s; z-index: 30; }
+    .home-bar:hover { background: #fff; }
+
+    .input-module {
+      background: var(--demo-card-bg);
+      border: 1px solid #333;
+      padding: 15px;
+      border-radius: 12px;
+      width: 140px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .input-module:hover { transform: scale(1.05); border-color: var(--accent-ruby); box-shadow: 0 0 15px rgba(155,28,49,0.2); }
+    .input-module .icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+    .input-module .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; font-family: 'Space Mono', monospace; color: #ccc; }
+
+    /* Positioning */
+    .mod-tl { grid-area: tl; justify-self: end; }
+    .mod-top { grid-area: top; }
+    .mod-tr { grid-area: tr; justify-self: start; }
+    .mod-left { grid-area: left; justify-self: end; }
+    .mod-right { grid-area: right; justify-self: start; }
+    .mod-bl { grid-area: bl; justify-self: end; }
+    .mod-bottom { grid-area: bottom; }
+    .mod-br { grid-area: br; justify-self: start; }
+
+    /* Device Modes */
+    .mode-camera { background: #000; box-shadow: 0 0 80px rgba(255,255,255,0.1); }
+    .mode-game { background: var(--demo-game); color: #000; }
+    .mode-game h1, .mode-game p { color: #0f380f; }
+    .mode-phone { animation: vibrate 0.2s infinite; }
+    @keyframes vibrate { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, -1px); } }
+
+    /* FOOTER DEVICE PREVIEW */
+    .footer-device-preview {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      margin: 0 auto 15px auto;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .footer-device-preview:hover {
+      border-color: var(--accent-ruby);
+      box-shadow: 0 0 15px rgba(155,28,49,0.4);
+      transform: scale(1.1);
+    }
+    .footer-pulse {
+      width: 20px; height: 20px;
+      background: var(--accent-ruby);
+      border-radius: 50%;
+      animation: heart-pulse 2s infinite ease-in-out;
+    }
+    @keyframes heart-pulse { 
+      0%, 100% { transform: scale(1); opacity: 0.6; } 
+      50% { transform: scale(1.4); opacity: 1; } 
+    }
+    
+  </style>
+</head>
+<body class="bg-dark text-light" data-bs-spy="scroll" data-bs-target="#desktopNav" data-bs-offset="100">
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top border-bottom border-secondary border-opacity-25">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <span class="gizmo-dot" aria-hidden="true"></span>
+        <span class="fw-bold tracking-wide">Return to THE Devices (RtTD)</span>
+      </a>
+      <div class="collapse navbar-collapse" id="desktopNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-4">
+          <li class="nav-item"><a class="nav-link text-uppercase" href="#concept">Concept</a></li>
+          <li class="nav-item"><a class="nav-link text-uppercase" href="#tech">Tech</a></li>
+          <li class="nav-item"><a class="nav-link text-uppercase" href="#prototype">Simulation</a></li>
+          <li class="nav-item"><a class="nav-link text-uppercase" href="#prototype">Documentation</a></li>
+          <li class="nav-item ms-lg-4">
+            <a class="nav-link text-uppercase nav-device-link" href="THE_DEVICE.html">
+              [ ZUGRIFF: THE DEVICE ]
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header id="home" class="vh-100 d-flex align-items-center justify-content-center text-center">
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <div class="container px-4 z-1">
+      <p class="text small font-monospace mb-3">[ HFK BREMEN | DIGITAL MEDIA | RETURN TO THE GIZMOS | FABIAN M. ROSE | 2026 ]</p>
+      <h1 class="display-1 fw-bold text-uppercase mb-3">
+        Archiv der <br>
+        <span class="text-gradient glitch" data-text="verschwundenen Dinge">
+          <span class="flicker-container">
+            <span class="flicker-char">v</span><span class="flicker-char">e</span><span class="flicker-char">r</span><span class="flicker-char">s</span><span class="flicker-char">c</span><span class="flicker-char">h</span><span class="flicker-char">w</span><span class="flicker-char">u</span><span class="flicker-char">n</span><span class="flicker-char">d</span><span class="flicker-char">e</span><span class="flicker-char">n</span><span class="flicker-char">e</span><span class="flicker-char">n</span>
+          </span> Dinge
+        </span>
+      </h1>
+      <p class="lead text mx-auto mb-5" style="max-width: 700px;">
+        Ein dekonstruiertes (Gebrochenes :() Smart-Phone - ) LG G7
+        <p class="text mx-auto mb-4" style="max-width: 500px;">
+        als materielles Zeugnis eines digitalen Monopols
+        verbunden mit seinen Ahnen(>-/-<)
+        </p>
+      </p>
+      <a class="btn btn-outline-light btn-lg rounded-pill px-5" href="#concept">Untersuchung starten</a>
+    </div>
+  </header>
+
+  <section id="concept" class="py-5 my-5 container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6">
+        <h2 class="h4 text-accent mb-3">Das ultimative Gadget</h2>
+        <ul class="list-unstyled font-monospace small ps-3 border-start border-secondary">
+          <li class="mb-1">(smart)-Phone als Ultimatives Gadget</li>
+          <li class="mb-1">(Smart)-Phone als Alleskönner</li>
+          <li class="mb-1">(SMart)-Phone als Herz</li>
+          <li class="mb-1">(SMArt)-Phone als Licht</li>
+          <li class="mb-1">(SMARt)-Phone als Radio</li>
+          <li class="mb-1">(SMART)-Phone als Kompass</li>
+          <li class="mb-1">(sMART)-Phone als Kamera</li>
+          <li class="mb-1">(smART)-Phone als Spiel</li>
+        </ul>
+        <p class="text mt-3">
+          Doch die zentrale Frage dieser Arbeit bleibt: 
+          <br><strong class="text-light">Beeinflussen Dinge das Smartphone noch oder fließen alle Fubnktionen in das Smartphone hinein?</strong>
+        </p>
+      </div>
+      <div class="col-lg-6">
+        <div class="device-illustration p-5 rounded-3 bg-dark-card border text-center d-flex flex-column align-items-center justify-content-center">
+          <svg viewBox="0 0 160 220" width="80%" aria-hidden="true" style="filter: drop-shadow(0 0 10px rgba(155,28,49,0.3));">
+            <!-- Central Device Frame -->
+            <rect x="30" y="10" width="100" height="200" rx="10" fill="none" stroke="var(--border-subtle)" stroke-width="2" />
+            
+            <!-- Analog Cables (Left side - partially disconnected/hanging) -->
+            <g stroke="var(--text-muted)" stroke-width="1.5" fill="none">
+              <path d="M0,50 C15,50 20,40 30,55" />
+              <path d="M0,80 L25,80 C28,80 30,85 30,90" stroke="var(--accent-ruby)" />
+              <path d="M0,120 C10,120 15,140 10,165" /> <!-- Hanging Cable -->
+              <path d="M0,150 L20,150 C25,150 25,160 22,180" /> <!-- Broken Cable -->
+            </g>
+
+            <!-- WLAN/Digital Signals (Right side - radiation/waves) -->
+            <g fill="none" stroke-width="1.5">
+              <path d="M130,60 A40,40 0 0 1 130,110" class="signal-wave" />
+              <path d="M130,75 A25,25 0 0 1 130,95" class="signal-wave" style="animation-delay: 1s" />
+              <path d="M130,45 A55,55 0 0 1 130,125" class="signal-wave" style="animation-delay: 2s" />
+              
+              <!-- Wireless Node Points -->
+              <circle cx="145" cy="85" r="2" fill="var(--accent-blue-soft)" />
+              <circle cx="155" cy="50" r="1.5" fill="var(--accent-blue-soft)" opacity="0.4" />
+            </g>
+
+            <!-- Breaking Cracks -->
+            <path d="M30 100 L60 130 L40 160 M130 50 L90 90 L110 140" fill="none" stroke="var(--accent-ruby)" stroke-width="1.2" opacity="0.6" />
+            
+            <!-- Central Pulse Core -->
+            <circle cx="80" cy="110" r="8" class="pulse-circle" />
+          </svg>
+          <p class="small text-tech mt-4 mb-0 font-monospace text-center">FIG. 01: Brüche & Aufbrüche</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section id="tech" class="py-5 my-5 container">
+    <div class="row g-5">
+      <div class="col-lg-6">
+        <h3 class="h3 mb-4"><span class="text-gradient">Versteckte Technik</span></h3>
+        <ul class="list-unstyled d-grid gap-3">
+          <li class="d-flex gap-3">
+            <div><strong class="text-light">BLE Proximity</strong><div class="text-muted small">RSSI-basierte Interaktion.</div></div>
+          </li>
+          <li class="d-flex gap-3">
+            <div>
+              <strong class="neon-pulse">Lichtpuls</strong>
+              <div class="text small"><span class="led-char led-r">L</span><span class="led-char led-g">E</span><span class="led-char led-b">D</span> & <span class="neon-old">Neon</span>.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-6">
+        <div class="code-block">
+          <div class="text-muted small font-monospace mb-2">src/main.cpp</div>
+          <pre class="mb-0">
+void loop() {
+  if (getBLE() > -60) {
+    pulse(120); // Neon Buzz
+  } else {
+    pulse(40);  // Standby
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prototype" class="py-5" style="border-top: 1px solid var(--border-subtle); background: linear-gradient(180deg, var(--bg-main) 0%, #000 100%);">
+    <div class="container text-center mb-4">
+      <h3 class="display-6 mb-2">Funktionale Simulation</h3>
+      <p class="font-monospace text-tech small">WÄHLEN SIE EINE FUNKTION!</p>
+      
+      <!-- NEU: Systemstatus -->
+      <div class="mt-4 text-muted small">
+        <button id="statusBtn" class="btn btn-sm btn-outline-warning">Systemstatus abrufen</button>
+        <span id="statusText" class="ms-3 text-tech" aria-live="polite">SYSTEM_STATUS: —</span>
+      </div>
+    </div>
+
+    <div id="prototype-stage">
+      
+      <div class="input-module mod-tl" onclick="setMode('camera')">
+        <span class="icon">📷</span>
+        <span class="label">Kamera</span>
+      </div>
+
+      <div class="input-module mod-top" onclick="setMode('compass')">
+        <span class="icon">🧭</span>
+        <span class="label">Kompass</span>
+      </div>
+
+      <div class="input-module mod-tr" onclick="setMode('ai')">
+        <span class="icon">🧠</span>
+        <span class="label">DAS Archiv</span>
+      </div>
+
+      <div class="input-module mod-left" onclick="setMode('game')">
+        <span class="icon">👾</span>
+        <span class="label">Spiel</span>
+      </div>
+
+      <div id="device" class="device-core">
+        <div class="scanlines"></div>
+        <div id="deviceContent" class="screen-data">
+          <h1 id="screenMain">--</h1>
+          <p id="screenSub">Warte auf Input...</p>
+        </div>
+        <div class="home-bar" onclick="resetDevice()" title="System Reset"></div>
+      </div>
+
+      <div class="input-module mod-right" onclick="setMode('phone')">
+        <span class="icon">☎️</span>
+        <span class="label">Signal</span>
+      </div>
+
+      <div class="input-module mod-bl" onclick="setMode('radio')">
+        <span class="icon">📻</span>
+        <span class="label">Radio</span>
+      </div>
+      
+      <!-- NEU: Taschenrechner Modul an unterer Position -->
+      <div class="input-module mod-bottom" onclick="setMode('calculator')">
+        <span class="icon">🧮</span>
+        <span class="label">Rechner</span>
+      </div>
+
+      <div class="input-module mod-br" onclick="resetDevice()">
+        <span class="icon">🔄</span>
+        <span class="label">Reset</span>
+      </div>
+
+    </div>
+    
+    <div class="text-center mt-3 text-muted small font-monospace">
+      System Status: <span id="demoStatus">IDLE</span>
+    </div>
+  </section>
+
+  <footer id="footer" class="py-5 bg-black text border-top border-secondary border-opacity-25">
+    <div class="container text-center">
+      
+      <!-- MINIMALE VORSCHAU / PORTAL -->
+      <a href="THE_DEVICE.html" title="Zum Haupt-Interface">
+        <div class="footer-device-preview">
+            <div class="footer-pulse"></div>
+            <div style="position:absolute; bottom:2px; font-size:8px; width:100%; text-align:center; color:#555; font-family:'Space Mono';">THE DEVICE</div>
+        </div>
+      </a>
+
+      <div class="mb-4">
+        <h4 class="h5 text-light mb-1">Return to THE Devices</h4>
+        <span class="small text">Return of the Gizmos | Dennis P. Paul | HFK Bremen</span>
+      </div>
+      <div class="small text-uppercase text bg-warning bg-opacity-10 d-inline-block px-3 py-1 rounded">End of Record</div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const apiKey = "";
+    const device = document.getElementById('device');
+    const deviceContent = document.getElementById('deviceContent');
+    const statusLabel = document.getElementById('demoStatus');
+    let compassInterval = null;
+
+    // Status Button Logik
+    document.getElementById('statusBtn').addEventListener('click', function() {
+        const statusText = document.getElementById('statusText');
+        statusText.innerText = "SYSTEM_STATUS: ANALYSING...";
+        statusText.style.color = "#ff9e0b";
+        setTimeout(() => {
+            statusText.innerText = "SYSTEM_STATUS: ALL SYSTEMS NOMINAL";
+            statusText.style.color = "#8bac0f";
+        }, 1200);
+    });
+
+    // Taschenrechner Funktionen (Global)
+    let calcCurrent = "0";
+    let calcOpStored = null;
+    let calcPrev = null;
+    
+    window.calcInput = function(num) {
+        if(calcCurrent === "0") calcCurrent = num;
+        else calcCurrent += num;
+        updateCalcDisplay();
+    };
+    
+    window.calcOp = function(op) {
+        calcPrev = parseFloat(calcCurrent);
+        calcOpStored = op;
+        calcCurrent = "0";
+    };
+    
+    window.calcClear = function() {
+        calcCurrent = "0";
+        calcOpStored = null;
+        calcPrev = null;
+        updateCalcDisplay();
+    };
+    
+    window.calcResult = function() {
+        if(calcOpStored && calcPrev !== null) {
+            const curr = parseFloat(calcCurrent);
+            let res = 0;
+            switch(calcOpStored) {
+                case '+': res = calcPrev + curr; break;
+                case '-': res = calcPrev - curr; break;
+                case '*': res = calcPrev * curr; break;
+                case '/': res = calcPrev / curr; break;
+            }
+            calcCurrent = res.toString();
+            calcOpStored = null;
+            calcPrev = null;
+            updateCalcDisplay();
+        }
+    };
+    
+    function updateCalcDisplay() {
+        const display = document.getElementById('calcDisplay');
+        if(display) display.innerText = calcCurrent.substring(0, 10);
+    }
+
+
+    function resetDevice() {
+      if (compassInterval) clearInterval(compassInterval);
+      device.className = 'device-core'; 
+      deviceContent.innerHTML = '<h1 id="screenMain">--</h1><p id="screenSub">System Idle</p>';
+      statusLabel.innerText = "IDLE";
+      statusLabel.style.color = "#666";
+    }
+
+    function setMode(mode) {
+      resetDevice(); 
+      statusLabel.innerText = "INITIALIZING: " + mode.toUpperCase();
+      
+      setTimeout(() => {
+        switch(mode) {
+          case 'camera':
+            device.classList.add('mode-camera');
+            deviceContent.innerHTML = `
+              <div class="viewfinder">
+                <div class="viewfinder-corner tl"></div>
+                <div class="viewfinder-corner tr"></div>
+                <div class="viewfinder-corner bl"></div>
+                <div class="viewfinder-corner br"></div>
+                <div style="position: absolute; top: 20px; right: 20px; color: red; font-size: 0.6rem;">REC ●</div>
+                <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 0.6rem;">ISO 800 | 1/60 | F2.8</div>
+              </div>
+              <p style="color: #fff; margin-top: 10px;">OPTICS ACTIVE</p>
+            `;
+            statusLabel.innerText = "VIEWFINDER ENGAGED";
+            break;
+
+          case 'compass':
+            deviceContent.innerHTML = `
+              <h1>COMPASS</h1>
+              <div class="compass-container">
+                <div class="compass-needle" id="needle"></div>
+              </div>
+              <p>ORIENTATION SYNC</p>
+            `;
+            statusLabel.innerText = "MAGNETOMETER READ";
+            compassInterval = setInterval(() => {
+              const needle = document.getElementById('needle');
+              if(needle) needle.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+            }, 800);
+            break;
+
+          case 'ai':
+            deviceContent.innerHTML = `
+              <div class="ai-box">
+                <h1 style="font-size:1.1rem">Archiv-KI</h1>
+                <p style="font-size:0.6rem">Interaktive Geräte-Analyse</p>
+                <div id="aiResponse" style="font-size:0.65rem; min-height: 100px; color: var(--accent-blue-soft); overflow-y: auto;">Warte auf Eingabe...</div>
+                <input type="text" id="aiInput" class="ai-input" placeholder="Frage das Archiv..." onkeypress="handleAI(event)">
+              </div>
+            `;
+            statusLabel.innerText = "GEMINI CORE ONLINE";
+            break;
+            
+          case 'calculator':
+            deviceContent.innerHTML = `
+              <div style="display:flex; flex-direction:column; height:100%; padding: 10px;">
+                <div id="calcDisplay" style="background:#8b9bb4; color:#000; font-family:'Courier New'; padding:5px; text-align:right; margin-bottom:10px; font-size:1.5rem; border:2px inset #666; border-radius: 4px;">0</div>
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:5px; flex-grow:1;">
+                   <button onclick="calcInput('7')" class="calc-btn">7</button>
+                   <button onclick="calcInput('8')" class="calc-btn">8</button>
+                   <button onclick="calcInput('9')" class="calc-btn">9</button>
+                   <button onclick="calcOp('/')" class="calc-btn">/</button>
+                   <button onclick="calcInput('4')" class="calc-btn">4</button>
+                   <button onclick="calcInput('5')" class="calc-btn">5</button>
+                   <button onclick="calcInput('6')" class="calc-btn">6</button>
+                   <button onclick="calcOp('*')" class="calc-btn">x</button>
+                   <button onclick="calcInput('1')" class="calc-btn">1</button>
+                   <button onclick="calcInput('2')" class="calc-btn">2</button>
+                   <button onclick="calcInput('3')" class="calc-btn">3</button>
+                   <button onclick="calcOp('-')" class="calc-btn">-</button>
+                   <button onclick="calcInput('0')" class="calc-btn">0</button>
+                   <button onclick="calcClear()" class="calc-btn" style="color:#ff5555">C</button>
+                   <button onclick="calcResult()" class="calc-btn" style="background:#4466ff">=</button>
+                   <button onclick="calcOp('+')" class="calc-btn">+</button>
+                </div>
+              </div>
+            `;
+            statusLabel.innerText = "CALCULATOR MODULE";
+            break;
+
+          case 'game':
+            device.classList.add('mode-game');
+            deviceContent.innerHTML = '<h1>P1</h1><p>PRESS START</p><div style="font-size: 2rem; margin-top: 20px;">👾</div>';
+            statusLabel.innerText = "8-BIT EMULATION";
+            statusLabel.style.color = "#8bac0f";
+            break;
+
+          case 'phone':
+            device.classList.add('mode-phone');
+            deviceContent.innerHTML = '<h1>CALL</h1><p>SEARCHING...</p><div style="font-size: 2rem; margin-top: 20px;">☎️</div>';
+            statusLabel.innerText = "INCOMING";
+            statusLabel.style.color = "#0dcaf0";
+            break;
+
+          case 'radio':
+            deviceContent.innerHTML = '<h1>FM</h1><p>104.5 MHz</p><div style="width: 80%; height: 20px; border: 1px solid #ff9e0b; margin: 20px auto; background: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(255,158,11,0.3) 5px, rgba(255,158,11,0.3) 10px);"></div>';
+            statusLabel.innerText = "RECEIVING STEREO";
+            statusLabel.style.color = "#ff9e0b";
+            break;
+        }
+      }, 400); 
+    }
+
+    // Gemini API Call with Exponential Backoff
+    async function callGemini(prompt) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: "Du bist eine Archiv-KI eines Kunstprojekts namens 'Return to the Devices'. Deine Antworten sind extrem kurz, kryptisch, technoid und poetisch. Du beklagst den Verlust spezialisierter Geräte an das Smartphone. Verwende Fachbegriffe aus der Hardware-Technik." }] }
+      };
+
+      for (let i = 0; i < 5; i++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error();
+          const result = await response.json();
+          return result.candidates?.[0]?.content?.parts?.[0]?.text || "FEHLER IM DATENSATZ.";
+        } catch (e) {
+          const delay = Math.pow(2, i) * 1000;
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+      return "KOMMUNIKATION ABGEBROCHEN. SYSTEMKRITISCHER FEHLER.";
+    }
+
+    async function handleAI(event) {
+      if (event.key === 'Enter') {
+        const input = document.getElementById('aiInput');
+        const display = document.getElementById('aiResponse');
+        const text = input.value;
+        if (!text) return;
+        
+        input.disabled = true;
+        display.innerText = "ARCHIV WIRD DURCHSUCHT...";
+        
+        const response = await callGemini(text);
+        
+        display.innerText = response;
+        input.disabled = false;
+        input.value = "";
+        input.focus();
+      }
+    }
+  </script>
+</body>
+</html>
